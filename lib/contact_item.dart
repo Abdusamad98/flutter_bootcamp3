@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 
 class ContactItem extends StatelessWidget {
-  const ContactItem({Key? key, required this.iconPath, required this.contactName, required this.number, required this.whenClicked, required this.isSelected, required this.deleteClicked}) : super(key: key);
+  const ContactItem(
+      {Key? key,
+      required this.iconPath,
+      required this.contactName,
+      required this.number,
+      required this.whenClicked,
+      required this.isSelected,
+      required this.deleteClicked,
+      required this.updateClicked})
+      : super(key: key);
 
   final String iconPath;
   final String contactName;
   final String number;
   final VoidCallback whenClicked;
   final VoidCallback deleteClicked;
+  final VoidCallback updateClicked;
   final bool isSelected;
 
   @override
@@ -18,7 +28,7 @@ class ContactItem extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-            color: isSelected?Colors.green:Colors.white,
+            color: isSelected ? Colors.green : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -29,11 +39,8 @@ class ContactItem extends StatelessWidget {
             ]),
         child: Row(
           children: [
-            Icon(
-              Icons.perm_identity_rounded,
-              size: 60,
-               color: isSelected?Colors.white:Colors.black
-            ),
+            Icon(Icons.perm_identity_rounded,
+                size: 60, color: isSelected ? Colors.white : Colors.black),
             SizedBox(
               width: 10,
             ),
@@ -44,20 +51,38 @@ class ContactItem extends StatelessWidget {
                 Text(
                   contactName,
                   style: TextStyle(
-                    fontSize: 20,
-                      color: isSelected?Colors.white:Colors.black
-                  ),
+                      fontSize: 20,
+                      color: isSelected ? Colors.white : Colors.black),
                 ),
                 Text(
                   number,
                   style: TextStyle(
-                    fontSize: 16,
-                      color: isSelected?Colors.red:Colors.black
-                  ),
+                      fontSize: 16,
+                      color: isSelected ? Colors.red : Colors.black),
                 ),
               ],
             )),
-            TextButton(onPressed: deleteClicked, child: Icon(Icons.delete,color: Colors.red,size: 24,),)
+            TextButton(
+              onPressed: deleteClicked,
+              child: Icon(
+                Icons.delete,
+                color: Colors.red,
+                size: 24,
+              ),
+              style: ButtonStyle(
+                  padding: MaterialStateProperty.all(EdgeInsets.zero)),
+            ),
+            TextButton(
+              onPressed: updateClicked,
+              style: ButtonStyle(
+                  padding: MaterialStateProperty.all(EdgeInsets.zero)),
+
+              child: Icon(
+                Icons.edit,
+                color: Colors.blueAccent,
+                size: 24,
+              ),
+            )
           ],
         ),
       ),

@@ -73,7 +73,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(builder: (BuildContext context) {
                 return OtherScreen();
               }));
-
             },
           ),
           centerTitle: true,
@@ -85,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: IconButton(
                 icon: Icon(Icons.add),
                 onPressed: () {
-                  myCustomDialog();
+                  myCustomDialogAdd();
                 },
               ),
             )
@@ -96,6 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ...List.generate(
               list.length,
               (index) => ContactItem(
+                updateClicked: () {
+                  myCustomDialogUpdate(
+                      myContactInfo: list[index], updateIndex: index);
+                },
                 deleteClicked: () {
                   setState(() {
                     UtilityFunctions.getMyToast(
@@ -120,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  void myCustomDialog() {
+  void myCustomDialogAdd() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -157,7 +160,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     // },
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
-                      prefixText: "+99 89",
                       hintText: 'Enter number',
                     ),
                   ),
@@ -184,6 +186,89 @@ class _MyHomePageState extends State<MyHomePage> {
                             phoneController.text = "";
                             // Navigator.pop(context);
 
+                          } else {
+                            UtilityFunctions.getMyToast(
+                                message: "Enter inputs");
+                          }
+                        });
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.blueAccent,
+                      ),
+                      child: Text(
+                        "Save contact",
+                        style: TextStyle(color: Colors.white),
+                      ))
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void myCustomDialogUpdate(
+      {required MyContactInfo myContactInfo, required int updateIndex}) {
+    phoneController.text = myContactInfo.contactNumber;
+    nameController.text = myContactInfo.contactName;
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            insetPadding: EdgeInsets.symmetric(horizontal: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+              height: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Enter contact info",
+                    style: TextStyle(fontSize: 22, color: Colors.black),
+                  ),
+                  TextField(
+                    controller: nameController,
+                    // onChanged: (value) {
+                    //   contactName = value;
+                    // },
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(hintText: 'Enter name'),
+                  ),
+                  TextField(
+                    controller: phoneController,
+                    // onChanged: (value) {
+                    //   print(value);
+                    //   contactNumber = value;
+                    // },
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      hintText: 'Enter number',
+                    ),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          contactName = nameController.text;
+                          contactNumber = phoneController.text;
+
+                          if (contactNumber.isNotEmpty &&
+                              contactName.isNotEmpty) {
+                            list[updateIndex] = MyContactInfo(
+                              iconPath: "",
+                              contactName: contactName,
+                              contactNumber: contactNumber,
+                            );
+                            UtilityFunctions.getMyToast(
+                                message: "Updated $contactName");
+                            // contactNumber = '';
+                            // contactName = '';
+                            nameController.text = "";
+                            phoneController.text = "";
+                            Navigator.pop(context);
                           } else {
                             UtilityFunctions.getMyToast(
                                 message: "Enter inputs");
