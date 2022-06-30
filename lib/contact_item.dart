@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ContactItem extends StatelessWidget {
-  const ContactItem({Key? key, required this.iconPath, required this.contactName, required this.number, required this.whenClicked, required this.isSelected}) : super(key: key);
+  const ContactItem({Key? key, required this.iconPath, required this.contactName, required this.number, required this.whenClicked, required this.isSelected, required this.deleteClicked}) : super(key: key);
 
   final String iconPath;
   final String contactName;
   final String number;
   final VoidCallback whenClicked;
+  final VoidCallback deleteClicked;
   final bool isSelected;
 
   @override
@@ -55,7 +56,8 @@ class ContactItem extends StatelessWidget {
                   ),
                 ),
               ],
-            ))
+            )),
+            TextButton(onPressed: deleteClicked, child: Icon(Icons.delete,color: Colors.red,size: 24,),)
           ],
         ),
       ),
