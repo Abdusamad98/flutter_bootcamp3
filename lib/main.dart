@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bootcamp3/contact_item.dart';
+import 'package:flutter_bootcamp3/detail_info/detail_info.dart';
 import 'package:flutter_bootcamp3/fake_data.dart';
-import 'package:flutter_bootcamp3/my_list_item.dart';
+import 'package:flutter_bootcamp3/image/image_screen.dart';
 import 'package:flutter_bootcamp3/other_screen.dart';
 import 'package:flutter_bootcamp3/utility_functions.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         designSize: const Size(370, 812),
         builder: (BuildContext context, Widget? child) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: ThemeData(
               primarySwatch: Colors.blue,
@@ -47,13 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-
   int activeIndex = -1;
 
-  // bool selected1 = false;
-  // bool selected2 = false;
-  // bool selected3 = false;
-  // bool selected4 = false;
   @override
   void initState() {
     phoneController.text = "A";
@@ -71,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.pop(context);
               Navigator.push(context,
                   MaterialPageRoute(builder: (BuildContext context) {
-                return OtherScreen();
+                return const OtherScreen();
               }));
             },
           ),
@@ -90,11 +87,21 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ],
         ),
-        body: ListView(
-          children: [
-            ...List.generate(
-              list.length,
-              (index) => ContactItem(
+        body: ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (
+              BuildContext context,
+              index,
+            ) {
+              return ContactItem(
+                onImageTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return ImageScreen(imagePath: list[index].iconPath);
+                    }),
+                  );
+                },
                 updateClicked: () {
                   myCustomDialogUpdate(
                       myContactInfo: list[index], updateIndex: index);
@@ -108,19 +115,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     list.removeAt(index);
                   });
                 },
-                iconPath: "",
+                iconPath: list[index].iconPath,
                 contactName: list[index].contactName,
                 number: list[index].contactNumber,
                 whenClicked: () {
+                 Navigator.push(context,  MaterialPageRoute(builder: (BuildContext context) {
+                   return DetailInfo(myContactInfo: list[index]);
+                 }));
                   setState(() {
                     activeIndex = index;
                   });
                 },
                 isSelected: activeIndex == index,
-              ),
-            ),
-          ],
-        ));
+              );
+            }));
   }
 
   void myCustomDialogAdd() {
@@ -173,6 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               contactName.isNotEmpty) {
                             list.add(
                               MyContactInfo(
+                                aboutInfo: "",
                                 iconPath: "",
                                 contactName: contactName,
                                 contactNumber: contactNumber,
@@ -258,6 +267,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           if (contactNumber.isNotEmpty &&
                               contactName.isNotEmpty) {
                             list[updateIndex] = MyContactInfo(
+                              aboutInfo: "",
                               iconPath: "",
                               contactName: contactName,
                               contactNumber: contactNumber,
@@ -307,6 +317,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 setState(() {
                   list.add(
                     MyContactInfo(
+                      aboutInfo: "",
                       iconPath: "",
                       contactName: "contactName",
                       contactNumber: "contactNumber",

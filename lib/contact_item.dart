@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class ContactItem extends StatelessWidget {
@@ -9,7 +11,8 @@ class ContactItem extends StatelessWidget {
       required this.whenClicked,
       required this.isSelected,
       required this.deleteClicked,
-      required this.updateClicked})
+      required this.updateClicked,
+      required this.onImageTap})
       : super(key: key);
 
   final String iconPath;
@@ -18,6 +21,7 @@ class ContactItem extends StatelessWidget {
   final VoidCallback whenClicked;
   final VoidCallback deleteClicked;
   final VoidCallback updateClicked;
+  final VoidCallback onImageTap;
   final bool isSelected;
 
   @override
@@ -34,34 +38,31 @@ class ContactItem extends StatelessWidget {
               BoxShadow(
                   blurRadius: 10,
                   spreadRadius: 6,
-                  offset: Offset(0, 3),
+                  offset: const Offset(0, 3),
                   color: Colors.grey.shade300)
             ]),
-        child: Row(
+        child: Column(
           children: [
-            Icon(Icons.perm_identity_rounded,
-                size: 60, color: isSelected ? Colors.white : Colors.black),
-            SizedBox(
-              width: 10,
+            GestureDetector(
+              onTap: onImageTap,
+              child: Image.asset(
+                iconPath,
+                width: 160,
+                height: 160,
+              ),
             ),
-            Expanded(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  contactName,
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: isSelected ? Colors.white : Colors.black),
-                ),
-                Text(
-                  number,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: isSelected ? Colors.red : Colors.black),
-                ),
-              ],
-            )),
+            SizedBox(width: 10),
+            Text(
+              contactName,
+              style: TextStyle(
+                  fontSize: 20,
+                  color: isSelected ? Colors.white : Colors.black),
+            ),
+            Text(
+              number,
+              style: TextStyle(
+                  fontSize: 16, color: isSelected ? Colors.red : Colors.black),
+            ),
             TextButton(
               onPressed: deleteClicked,
               child: Icon(
@@ -76,7 +77,6 @@ class ContactItem extends StatelessWidget {
               onPressed: updateClicked,
               style: ButtonStyle(
                   padding: MaterialStateProperty.all(EdgeInsets.zero)),
-
               child: Icon(
                 Icons.edit,
                 color: Colors.blueAccent,
